@@ -7,11 +7,19 @@ import play.mvc.*;
 import play.data.validation.*;
 import play.libs.*;
 import play.utils.*;
+import play.modules.gae.*;
 
 public class Secure extends Controller {
 
     @Before(unless={"login", "authenticate", "logout"})
     static void checkAccess() throws Throwable {
+        if (GAE.getUser() == null) {
+          Application.login();
+        } else {
+          session.put("username", GAE.getUser().getEmail());
+          session.put("isAdmin", GAE.isAdmin());
+        }
+
         // Authent
         if(!session.contains("username")) {
             flash.put("url", request.method == "GET" ? request.url : "/"); // seems a good default
@@ -50,7 +58,8 @@ public class Secure extends Controller {
             }
         }
         flash.keep("url");
-        render();
+//        render();
+        Application.login();
     }
 
     public static void authenticate(@Required String username, String password, boolean remember) throws Throwable {
@@ -84,7 +93,8 @@ public class Secure extends Controller {
         response.removeCookie("rememberme");
         Security.invoke("onDisconnected");
         flash.success("secure.logout");
-        login();
+//        login();
+        Application.logout();
     }
     
     // ~~~ Utils
@@ -143,6 +153,9 @@ public class Secure extends Controller {
             return session.get("username");
         }
 
+        static String isAdmin() {
+            return session.get("isAdmin");
+        }
         /**
          * Indicate if a user is currently connected
          * @return  true if the user is connected
