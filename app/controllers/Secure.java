@@ -58,7 +58,6 @@ public class Secure extends Controller {
             }
         }
         flash.keep("url");
-//        render();
         Application.login();
     }
 

@@ -1,7 +1,7 @@
 # import these default routes as :
-# *         /               module:secure
+# *         /               module:gae-secure
 # ~~~~
 
-GET			/login			Secure.login
+GET			/login			Application.login
 POST        /login          Secure.authenticate
-GET         /logout         Secure.logout
+GET         /logout         Application.logout

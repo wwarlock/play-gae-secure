@@ -3,7 +3,7 @@
 import getopt
 from play.utils import *
 
-MODULE = "secure"
+MODULE = "gae-secure"
 
 COMMANDS = ["secure:", "secure:ov", "secure:override"]
 
